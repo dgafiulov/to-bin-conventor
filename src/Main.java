@@ -81,6 +81,7 @@ public class Main {
     }
 
     private static void settings() {
+        int a = 0;
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
         System.out.println("Type the number of the setting to change it");
         System.out.println();
@@ -92,17 +93,22 @@ public class Main {
         boolean settingsFlag = false;
         while (!settingsFlag) {
             String answer = scan.nextLine();
-            if (Objects.equals(answer, "2")) settingsFlag = true;
-            if (Objects.equals(answer, "1")) {
+            if (Objects.equals(answer, "2")) {
+                settingsFlag = true;
+                a++;
+            } else if (Objects.equals(answer, "1")) {
                 System.out.println();
                 System.out.println("You must have premium account to use this.");
                 System.out.println("type: \"buy\" to buy premium account.");
                 System.out.println();
-            }
-            if (Objects.equals(answer, "buy")) {
+                a++;
+            } else if (Objects.equals(answer, "buy")) {
                 System.out.println();
                 System.out.println("You will have an ability to buy premium account in release 2.0. Maybe.");
                 System.out.println();
+                a++;
+            } else if (a != 0){
+                wrong();
             }
         }
     }
@@ -147,7 +153,7 @@ public class Main {
             System.out.println();
             System.out.print("Input integer number: ");
             try {
-                input_i = scan.nextInt();
+                input_i = scan.nextLong();
                 intFlag = true;
                 amountOfSame = 0;
             } catch (Exception e) {
@@ -156,25 +162,23 @@ public class Main {
                     System.out.println();
                     System.out.println("Да я смотрю, ты упорно не хочешь следовать инструкции.");
                     System.out.println();
-                }
-                if (amountOfSame == 5) {
+                } else if (amountOfSame == 5) {
                     System.out.println();
                     System.out.println("Че, вот прям вообще не хочется? Ну тут же написано, целое число. Это когда без дроби. Без циферок после запятой");
                     System.out.println();
-                }
-                if (amountOfSame == 7) {
+                } else if (amountOfSame == 7) {
                     System.out.println();
                     System.out.println("Серьезно? Это уже 7 раз подряд!");
                     System.out.println();
-                }
-                if (amountOfSame == 9) {
+                } else if (amountOfSame == 9) {
                     System.out.println();
                     System.out.println("Девять раз!!!");
                     System.out.println();
                     mainFlag = false;
                     amountOfSame = 0;
+                } else {
+                    wrong();
                 }
-                wrong();
                 String s = scan.nextLine();
             }
         }
@@ -205,22 +209,23 @@ public class Main {
             res.insert(0, num % 2);
             num = num / 2;
         }
-        return res.toString();
+        return String.valueOf(res);
     }
 
     public static void toCorrectBinaryInteger() {
+        System.out.println();
         long orig = input_i;
-        StringBuilder result = new StringBuilder(String.valueOf(Long.parseLong(toBinaryInteger(input_i))));
+        StringBuilder result = new StringBuilder(toBinaryInteger(input_i));
+        int len = result.length();
         amountOfZeros += result.length();
         gettingSign(input_i);
-        System.out.println(orig);
-        if (orig >= -128 && orig < 127) {
+        if (len <= 8) {
             System.out.println("byte:" + sign + addZeros(8, result));
-        } if (orig >= -32768 && orig < 32767) {
+        } if (len <= 16) {
             System.out.println("short:" + sign + addZeros(16, result));
-        } if (orig >= -2147483648 && orig < 2147483647) {
+        } if (len <= 32) {
             System.out.println("int:" + sign + addZeros(32, result));
-        } if (orig < 9223372036854775807L) {
+        } if (len <= 64) {
             System.out.println("long:" + sign + addZeros(64, result));
         } if (orig > 3.4E-38) {
             System.out.println("float: " + toCorrectBinFormat32bit(Double.parseDouble(String.valueOf(orig))));
@@ -239,7 +244,6 @@ public class Main {
     }
 
     public static String toBinaryFractional(int origNum) {
-        //int amountOfIterations = 0;
         double num = Double.parseDouble("0." + origNum);
         StringBuilder res = new StringBuilder();
 
